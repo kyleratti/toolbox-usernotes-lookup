@@ -3,6 +3,7 @@ import configurator from "@kyleratti/configurator";
 type AppConfig = {
   app: {
     url: string;
+    urlPath: string;
   };
   reddit: {
     appId: string;
@@ -14,6 +15,10 @@ export const config = configurator<AppConfig>({
   app: {
     url: {
       env: "APP_URL",
+      required: true,
+    },
+    urlPath: {
+      env: "APP_URL_PATH",
       required: true,
     },
   },

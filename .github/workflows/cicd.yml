@@ -22,6 +22,7 @@ env:
   REDDIT_APP_ID: ${{ secrets.REDDIT_APP_ID}}
   REDDIT_REDIRECT_URL: ${{ secrets.REDDIT_REDIRECT_URL}}
   APP_URL: ${{ secrets.APP_URL}}
+  APP_URL_PATH: ${{ secrets.APP_URL_PATH}}
 jobs:
   build:
     runs-on: ubuntu-latest

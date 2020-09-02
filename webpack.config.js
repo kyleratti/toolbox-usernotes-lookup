@@ -108,6 +108,7 @@ module.exports = {
       "process.env": {
         NODE_ENV: JSON.stringify(isDev ? "development" : "production"),
         APP_URL: JSON.stringify(process.env.APP_URL),
+        APP_URL_PATH: JSON.stringify(process.env.APP_URL_PATH),
         REDDIT_REDIRECT_URL: JSON.stringify(process.env.REDDIT_REDIRECT_URL),
         REDDIT_APP_ID: JSON.stringify(process.env.REDDIT_APP_ID),
       },
