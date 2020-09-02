@@ -1,0 +1,70 @@
+{
+  "name": "toolbox-usernotes-lookup",
+  "version": "1.0.0",
+  "description": "Retrieves all user notes added via toolbox for a user on all subreddits you are a moderator of",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf dist/*",
+    "dev": "npm run start",
+    "start": "cross-env NODE_ENV=development webpack-dev-server",
+    "prebuild": "npm run clean",
+    "build": "webpack",
+    "predeploy": "npx react-snap",
+    "deploy": "gh-pages -d dist",
+    "semantic-release": "semantic-release",
+    "serve": "npx http-server ./dist"
+  },
+  "reactSnap": {
+    "source": "dist",
+    "include": [
+      "/index.html"
+    ],
+    "crawl": false
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyleratti/toolbox-usernotes-lookup.git"
+  },
+  "author": "Kyle Ratti",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/kyleratti/toolbox-usernotes-lookup/issues"
+  },
+  "devDependencies": {
+    "@kyleratti/configurator": "^3.2.2",
+    "@semantic-release/git": "^9.0.0",
+    "@types/cookie": "^0.4.0",
+    "@types/pako": "^1.0.1",
+    "@types/react": "^16.9.48",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-router-dom": "^5.1.5",
+    "@webpack-cli/serve": "^0.2.0",
+    "cookie": "^0.4.1",
+    "cross-env": "^7.0.2",
+    "css-loader": "^4.2.2",
+    "dotenv": "^8.2.0",
+    "dotenv-webpack": "^2.0.0",
+    "file-loader": "^6.1.0",
+    "html-webpack-plugin": "^4.4.1",
+    "moment": "^2.27.0",
+    "pako": "^1.0.11",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "react-snap": "^1.23.0",
+    "rimraf": "^3.0.2",
+    "sass": "^1.26.10",
+    "sass-loader": "^10.0.1",
+    "semantic-release": "^17.1.1",
+    "snoowrap": "^1.21.0",
+    "source-map-loader": "^1.1.0",
+    "style-loader": "^1.2.1",
+    "ts-loader": "^8.0.3",
+    "ts-node": "^9.0.0",
+    "ts-node-dev": "^1.0.0-pre.61",
+    "typescript": "^4.0.2",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
