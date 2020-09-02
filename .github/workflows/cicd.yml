@@ -1,7 +1,7 @@
 name: CI/CD
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths:
       - "src/**"
       - "package.json"
@@ -9,7 +9,7 @@ on:
       - "webpack.config.js"
       - ".github/workflows/**"
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "src/**"
       - "package.json"
