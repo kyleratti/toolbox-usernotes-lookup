@@ -11,20 +11,22 @@ const isDev = process.env["NODE_ENV"] === "development";
 
 dotenv.config();
 
-dotenv.config();
-
 const PUBLIC_PATH = "/";
 const SRC = resolve("src");
 const DIST = resolve("dist");
 
-const [redirectUrl, appId] = [
+const [redirectUrl, appId, appUrl, appUrlPath] = [
   process.env.REDDIT_REDIRECT_URL,
   process.env.REDDIT_APP_ID,
+  process.env.APP_URL,
+  process.env.APP_URL_PATH,
 ];
 
 console.log("Webpack build", isDev ? "[development]" : "[production]");
 console.log(`REDDIT_REDIRECT_URL: ${redirectUrl}`);
 console.log(`REDDIT_APP_ID: ${appId}`);
+console.log(`APP_URL: ${appUrl}`);
+console.log(`APP_URL_PATH: ${appUrlPath}`);
 
 module.exports = {
   mode: isDev ? "development" : "production",
