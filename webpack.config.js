@@ -11,7 +11,6 @@ const isDev = process.env["NODE_ENV"] === "development";
 
 dotenv.config();
 
-const PUBLIC_PATH = "/";
 const SRC = resolve("src");
 const DIST = resolve("dist");
 
@@ -46,7 +45,7 @@ module.exports = {
   output: {
     filename: "[name]_[hash].bundle.js",
     path: DIST,
-    publicPath: isDev ? "/" : PUBLIC_PATH,
+    publicPath: isDev ? "/" : appUrlPath,
   },
 
   resolve: {
