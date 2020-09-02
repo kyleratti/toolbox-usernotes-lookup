@@ -19,7 +19,8 @@
     "include": [
       "/index.html"
     ],
-    "crawl": false
+    "crawl": false,
+    "publicPath": "/toolbox-usernotes-lookup/"
   },
   "repository": {
     "type": "git",
