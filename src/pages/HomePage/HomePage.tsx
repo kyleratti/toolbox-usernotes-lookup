@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import AuthenticatedOnly from "../../components/AuthenticatedOnly";
 import PageContainer from "../../components/PageContainer";
 import UnauthenticatedOnly from "../../components/UnauthenticatedOnly";
+import { NotesProvider } from "../../context/NotesContext";
 import NotesWidget from "./components/NotesWidget";
 
 const HomePage: React.FC = () => (
@@ -27,7 +28,9 @@ const HomePage: React.FC = () => (
     </UnauthenticatedOnly>
 
     <AuthenticatedOnly>
-      <NotesWidget />
+      <NotesProvider>
+        <NotesWidget />
+      </NotesProvider>
     </AuthenticatedOnly>
   </PageContainer>
 );

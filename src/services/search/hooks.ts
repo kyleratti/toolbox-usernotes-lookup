@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AppStatus } from "../../structures/appstatus";
-import { getUserNotes, UserNotesObject } from "./api";
+import { getAllUserNotes, UserNotesObject } from "./api";
 
 export type GetUserNotesHookData = {
   status: AppStatus;
@@ -8,7 +8,7 @@ export type GetUserNotesHookData = {
   notes: UserNotesObject | null;
 };
 
-export const useGetUserNotes = (username?: string): GetUserNotesHookData => {
+export const useGetAllUserNotes = (): GetUserNotesHookData => {
   const [status, setStatus] = useState(AppStatus.Ready);
   const [errorMessage, setErrorMessage] = useState(null);
   const [notes, setNotes] = useState<UserNotesObject | null>(null);
@@ -18,10 +18,9 @@ export const useGetUserNotes = (username?: string): GetUserNotesHookData => {
       setStatus(AppStatus.Loading);
 
       try {
-        if (username) {
-          const res = await getUserNotes(username);
-          setNotes(res.notes);
-        } else setNotes(null);
+        setStatus(AppStatus.ContactingReddit);
+        const res = await getAllUserNotes();
+        setNotes(res.notes);
 
         setErrorMessage(null);
       } catch (err) {
@@ -33,7 +32,7 @@ export const useGetUserNotes = (username?: string): GetUserNotesHookData => {
     };
 
     loadNotes();
-  }, [username]);
+  }, []);
 
   return { status, errorMessage, notes };
 };

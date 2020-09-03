@@ -84,7 +84,7 @@ const inflateData = (data: UserNotesPageContent) => {
   } as InflatedUserNotes;
 };
 
-export const getUserNotes = async (username: string) => {
+export const getAllUserNotes = async () => {
   try {
     const reddit = getRedditClient();
     // @ts-expect-error

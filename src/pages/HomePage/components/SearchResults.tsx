@@ -1,7 +1,5 @@
 import React from "react";
-import Loading from "../../../components/Loading";
-import { useGetUserNotes } from "../../../services/search/hooks";
-import { AppStatus } from "../../../structures/appstatus";
+import NoResults from "./NoResults";
 import ResultTable from "./ResultTable";
 
 type SearchResultsProps = {
@@ -9,17 +7,9 @@ type SearchResultsProps = {
 };
 
 const SearchResults: React.FC<SearchResultsProps> = ({ username }) => {
-  const { status, errorMessage, notes } = useGetUserNotes(username);
-
-  if (status === AppStatus.Loading) return <Loading />;
-  else if (status === AppStatus.ContactingReddit)
-    return <Loading message="Chatting with reddit..." />;
-
-  if (errorMessage) return <div>{errorMessage}</div>;
-
   return (
     <div id="searchResults">
-      {notes && <ResultTable username={username} notes={notes} />}
+      {(username && <ResultTable username={username} />) || <NoResults />}
     </div>
   );
 };
