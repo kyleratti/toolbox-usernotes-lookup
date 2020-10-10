@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useNotesSetter } from "../../../context/NotesContext";
+import React, { useState } from "react";
+import {
+  SearchFilterProvider,
+  useSubredditFilter,
+} from "../../../context/SearchFilterContext";
+import { useSubreddits } from "../../../hooks/reddit";
 import { useGetAllUserNotes } from "../../../services/search/hooks";
-import SearchResults from "./SearchResults";
+import { ResultTable } from "./ResultTable";
+import { SearchFilter } from "./SearchFilter";
 
 const Search: React.FC = () => {
   const [inputUsername, setInputUsername] = useState("");
   const [searchUsername, setSearchUsername] = useState("");
   const { status, errorMessage, notes } = useGetAllUserNotes();
-  const setNotes = useNotesSetter();
+  const modSubs = useSubreddits();
+  const filteredSubs = useSubredditFilter();
 
   const onSubmit: React.FormEventHandler = ({ nativeEvent: event }) => {
     setSearchUsername(inputUsername);
@@ -15,32 +21,23 @@ const Search: React.FC = () => {
     event.preventDefault();
   };
 
-  useEffect(() => {
-    if (setNotes) setNotes(notes);
-  }, [notes]);
+  // useEffect(() => {
+  //   if (setNotes) setNotes(notes);
+  // }, [notes]);
+
+  if (!modSubs) return <div className="warning">Loading subreddits...</div>;
+
+  if (modSubs.length <= 0)
+    return <div className="error">No moderated subreddits found!</div>;
 
   return (
-    <>
+    <SearchFilterProvider>
       <h2>Search</h2>
 
-      <form onSubmit={onSubmit} id="searchForm">
-        <label>
-          /u/
-          <input
-            id="searchInput"
-            type="search"
-            placeholder="spez"
-            onChange={(e) => setInputUsername(e.target.value)}
-            name="search_username"
-            autoFocus
-          />
-        </label>
+      <SearchFilter />
 
-        <input type="submit" value="Retrieve Notes" />
-      </form>
-
-      {searchUsername && <SearchResults username={searchUsername} />}
-    </>
+      <ResultTable />
+    </SearchFilterProvider>
   );
 };
 

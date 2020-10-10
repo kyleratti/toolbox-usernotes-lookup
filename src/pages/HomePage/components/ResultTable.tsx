@@ -1,59 +1,99 @@
-import moment from "moment";
-import React, { ReactElement } from "react";
+import { format, fromUnixTime } from "date-fns";
+import React from "react";
+import { Column, useTable } from "react-table";
+import { ExternalLink } from "../../../components/ExternalLink";
 import { useNotes } from "../../../context/NotesContext";
-import { UserNotes } from "../../../services/search/api";
-import NoResults from "./NoResults";
+import { NoteWithUsername } from "../../../services/search/api";
 
-type ResultTableProps = {
-  username?: string;
-};
+const renderProfileLink = (username: string) => (
+  <ExternalLink to={`https://reddit.com/user/${username}`} newTab>
+    /u/{username}
+  </ExternalLink>
+);
 
-const ResultTable: React.FC<ResultTableProps> = ({ username }) => {
-  const items = new Array<ReactElement>();
+const columns: Column<NoteWithUsername>[] = [
+  {
+    Header: "/u/",
+    accessor: "username",
+    Cell: ({ value }) => renderProfileLink(value),
+  },
+  {
+    Header: "Note",
+    accessor: "message",
+  },
+  {
+    Header: "Moderator",
+    accessor: "mod",
+    Cell: ({ value }) => renderProfileLink(value),
+  },
+  {
+    Header: "Date",
+    accessor: "timestamp",
+    Cell: ({ value }) => format(fromUnixTime(value), "yyyy-MM-dd hh:mm a"),
+  },
+];
+
+export const ResultTable: React.FC = () => {
   const notes = useNotes();
 
-  if (!notes) return <>ERROR</>;
+  const allReports = Object.keys(notes || {})
+    .map((username) => notes![username].map((note) => ({ ...note, username })))
+    .reduce((array, notesForUser) => array.concat(...notesForUser), []);
 
-  Object.keys(notes).map((key, idx) => {
-    if (!username || username.toLowerCase() === key.toLowerCase()) {
-      const val = notes[key] as UserNotes;
+  console.log(allReports);
 
-      val.ns.forEach((note, idx2) => {
-        const timestamp = moment.unix(note.t);
-        items.push(
-          <tr key={`${idx}_${idx2}`}>
-            <td>
-              <a href={`https://reddit.com/user/${note.m}`} target="_blank">
-                /u/{note.m}
-              </a>
-            </td>
-            <td>{note.n}</td>
-            <td className="date">
-              <time dateTime={timestamp.format("YYYY-MM-DDTHH:mm:ssZ")}>
-                {timestamp.local().format("YYYY-MM-DD @ HH:mm")}
-              </time>
-            </td>
-          </tr>
-        );
-      });
-    }
-  });
-
-  if (!items || items.length <= 0) return <NoResults />;
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({ columns, data: allReports });
 
   return (
-    <table>
+    <table {...getTableProps()} style={{ border: "solid 1px blue" }}>
       <thead>
-        <tr>
-          <th style={{ maxWidth: "12em" }}>Moderator</th>
-          <th>Note</th>
-          <th style={{ maxWidth: "15em" }}>Date</th>
-        </tr>
+        {headerGroups.map((headerGroup) => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column) => (
+              <th
+                {...column.getHeaderProps()}
+                style={{
+                  borderBottom: "solid 3px red",
+                  background: "aliceblue",
+                  color: "black",
+                  fontWeight: "bold",
+                }}
+              >
+                {column.render("Header")}
+              </th>
+            ))}
+          </tr>
+        ))}
       </thead>
-
-      <tbody>{items}</tbody>
+      <tbody {...getTableBodyProps()}>
+        {rows.map((row) => {
+          prepareRow(row);
+          return (
+            <tr {...row.getRowProps()}>
+              {row.cells.map((cell) => {
+                return (
+                  <td
+                    {...cell.getCellProps()}
+                    style={{
+                      padding: "10px",
+                      border: "solid 1px gray",
+                      background: "papayawhip",
+                    }}
+                  >
+                    {cell.render("Cell")}
+                  </td>
+                );
+              })}
+            </tr>
+          );
+        })}
+      </tbody>
     </table>
   );
 };
-
-export default ResultTable;

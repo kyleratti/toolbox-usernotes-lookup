@@ -51,6 +51,11 @@ export type WarningInflatedNote = {
    * @example "Ban"
    */
   w: string;
+  /**
+   * The subreddit the note was entered on
+   * @example "/r/PublicFreakout"
+   */
+  sub?: string;
 };
 
 export type Note = {

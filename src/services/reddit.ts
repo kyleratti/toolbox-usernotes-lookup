@@ -12,7 +12,7 @@ export const getRedditAuthUrl = () =>
   snoowrap.getAuthUrl({
     ...snooOptions,
     clientId: config.reddit.appId,
-    scope: ["wikiread"],
+    scope: ["wikiread", "mysubreddits"],
     redirectUri: config.reddit.redirectUrl,
     permanent: false,
   });

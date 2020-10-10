@@ -39,6 +39,7 @@
     "@types/react": "^16.9.48",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
+    "@types/react-table": "^7.0.23",
     "@webpack-cli/serve": "^0.2.0",
     "cookie": "^0.4.1",
     "cross-env": "^7.0.2",
@@ -49,10 +50,12 @@
     "html-webpack-plugin": "^4.4.1",
     "moment": "^2.27.0",
     "pako": "^1.0.11",
+    "prettier": "^2.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-snap": "^1.23.0",
+    "react-table": "^7.5.1",
     "rimraf": "^3.0.2",
     "sass": "^1.26.10",
     "sass-loader": "^10.0.2",
@@ -67,5 +70,8 @@
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "date-fns": "^2.16.1"
   }
 }

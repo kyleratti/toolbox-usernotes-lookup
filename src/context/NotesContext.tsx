@@ -1,24 +1,17 @@
-import React, { createContext, useContext, useState } from "react";
-import { UserNotesObject } from "../services/search/api";
+import React, { createContext, useContext } from "react";
+import { UserNotes } from "../services/search/api";
+import { useGetAllUserNotes } from "../services/search/hooks";
 
-const [NotesGetterContext, NotesSetterContext] = [
-  createContext<UserNotesObject | null>(null),
-  createContext<React.Dispatch<
-    React.SetStateAction<UserNotesObject | null>
-  > | null>(null),
-];
+const NotesGetterContext = createContext<UserNotes | null>(null);
 
 export const useNotes = () => useContext(NotesGetterContext);
-export const useNotesSetter = () => useContext(NotesSetterContext);
 
 export const NotesProvider: React.FC = ({ children }) => {
-  const [notes, setNotes] = useState<UserNotesObject | null>(null);
+  const { notes } = useGetAllUserNotes();
 
   return (
-    <NotesSetterContext.Provider value={setNotes}>
-      <NotesGetterContext.Provider value={notes}>
-        {children}
-      </NotesGetterContext.Provider>
-    </NotesSetterContext.Provider>
+    <NotesGetterContext.Provider value={notes}>
+      {children}
+    </NotesGetterContext.Provider>
   );
 };

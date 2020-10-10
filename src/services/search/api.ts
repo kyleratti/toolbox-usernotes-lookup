@@ -1,5 +1,5 @@
 import pako from "pako";
-import { OriginalNote, WarningInflatedNote } from "../../structures/toolbox";
+import { OriginalNote } from "../../structures/toolbox";
 import { getRedditClient } from "../reddit";
 
 // FIXME:
@@ -10,37 +10,54 @@ import { getRedditClient } from "../reddit";
 // I am not proud of anything in this file, but I wanted a working version up
 // This will be cleaned up to be infinitely more readable and possible to follow
 
-export type ToolboxUserNotesConstants = {
+export type ApiToolboxUserNotesConstants = {
   users: string[];
   warnings: string[];
 };
 
-type UserNotesPageContentGeneric = {
+type ApiUserNotesPageContentGeneric = {
   ver: number;
-  constants: ToolboxUserNotesConstants;
+  constants: ApiToolboxUserNotesConstants;
   warnings: string[];
 };
 
-export type UserNotesPageContentWithBlob = UserNotesPageContentGeneric & {
+export type ApiUserNotesPageContentWithBlob = ApiUserNotesPageContentGeneric & {
   blob: string;
 };
 
-export type UserNotesPageContent = UserNotesPageContentGeneric & {
-  notes: UserNotesObject;
+export type ApiUserNotesPageContent = ApiUserNotesPageContentGeneric & {
+  notes: ApiUserNotesObject;
 };
 
-export type UserNotes = {
+export type ApiUserNotes = {
   ns: OriginalNote[];
 };
 
-export type UserNotesObject = {
-  [key: string]: UserNotes;
+export type ApiUserNotesObject = {
+  [key: string]: ApiUserNotes;
 };
 
-type InflatedUserNotes = UserNotesPageContent & {
+type ApiInflatedUserNotes = ApiUserNotesPageContent & {
   mods: string[];
   warnings: string[];
   notes: any;
+};
+
+export type Note = {
+  link: string;
+  mod: string;
+  sub: string;
+  message: string;
+  timestamp: number;
+  warning: string;
+};
+
+export type NoteWithUsername = Note & {
+  username: string;
+};
+
+export type UserNotes = {
+  [username: string]: Note[];
 };
 
 const [toolboxCompatibleVersion, toolboxNotesWikiPage] = [6, "usernotes"];
@@ -51,52 +68,48 @@ const inflateBlob = (data: string) => {
   const inflater = new pako.Inflate({ to: "string" });
   inflater.push(blob);
 
-  return JSON.parse(inflater.result.toString()) as UserNotesObject;
+  return JSON.parse(inflater.result.toString()) as ApiUserNotesObject;
 };
 
-const inflateData = (data: UserNotesPageContent) => {
+const inflateData = (subreddit: string, data: ApiUserNotesPageContent) => {
   const { users, warnings } = data.constants;
 
-  const newNotes: any = {};
+  const newNotes: UserNotes = {};
 
   Object.keys(data.notes).forEach((key) => {
     const userNote = data.notes[key];
-    const newNs = new Array<WarningInflatedNote>();
+    const newNs = new Array<Note>();
 
     userNote.ns.forEach((obj) => {
       newNs.push({
-        ...obj,
-        m: users[obj.m],
-        w: warnings[obj.w],
+        link: obj.l,
+        mod: users[obj.m],
+        sub: subreddit,
+        message: obj.n,
+        timestamp: obj.t,
+        warning: warnings[obj.w],
       });
     });
 
-    newNotes[key] = {
-      ns: newNs,
-    };
+    newNotes[key] = newNs;
   });
 
-  return {
-    ...data,
-    mods: users,
-    warnings,
-    notes: newNotes,
-  } as InflatedUserNotes;
+  return newNotes;
 };
 
-export const getAllUserNotes = async () => {
+export const getAllUserNotes = async (subreddit: string) => {
   try {
     const reddit = getRedditClient();
     // @ts-expect-error
     const page = await reddit
-      .getSubreddit("PublicFreakout")
+      .getSubreddit(subreddit)
       .getWikiPage(toolboxNotesWikiPage)
       .fetch();
 
     const userNotesPageJson: string = page.content_md;
     const userNotesPageWithBlob = JSON.parse(
       userNotesPageJson
-    ) as UserNotesPageContentWithBlob;
+    ) as ApiUserNotesPageContentWithBlob;
 
     if (userNotesPageWithBlob.ver !== toolboxCompatibleVersion)
       throw new Error(
@@ -110,12 +123,14 @@ export const getAllUserNotes = async () => {
       notes: inflatedBlob,
     };
 
-    const userNotesPage = ({
-      ...userNotesPageInflated,
-      ...inflateData(userNotesPageInflated),
-    } as unknown) as UserNotesPageContent;
+    return inflateData(subreddit, userNotesPageInflated);
 
-    return userNotesPage;
+    // const userNotesPage = ({
+    //   ...userNotesPageInflated,
+    //   ...inflateData(subreddit, userNotesPageInflated),
+    // } as unknown) as ApiUserNotesPageContent;
+    //
+    // return userNotesPage;
   } catch (err) {
     throw err;
   }

@@ -20,10 +20,11 @@ const HomePage: React.FC = () => (
       </p>
 
       <p>
-        This application will only request <code>wikiread</code> permissions
-        from reddit, so the tokens being used have a very limited scope.
-        Regardless, please be mindful of the software and extensions running on
-        your computer.
+        This application will only request <code>wikiread</code>, to read the
+        mod-only wiki page, and <code>mysubreddits</code>, to know which wiki
+        pages to read. This means the tokens being used have a very limited
+        scope. Regardless, please be mindful of the software and extensions
+        running on your computer and if this is an unacceptable risk.
       </p>
     </UnauthenticatedOnly>
 

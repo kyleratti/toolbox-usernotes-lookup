@@ -1,6 +1,4 @@
 import React from "react";
-import NoResults from "./NoResults";
-import ResultTable from "./ResultTable";
 
 type SearchResultsProps = {
   username?: string;
@@ -9,7 +7,7 @@ type SearchResultsProps = {
 const SearchResults: React.FC<SearchResultsProps> = ({ username }) => {
   return (
     <div id="searchResults">
-      {(username && <ResultTable username={username} />) || <NoResults />}
+      {/* {(username && <ResultTable username={username} />) || <NoResults />} */}
     </div>
   );
 };

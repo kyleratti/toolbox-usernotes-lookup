@@ -6,8 +6,10 @@ const [TokenGetterContext, TokenSetterContext] = [
   createContext<React.Dispatch<React.SetStateAction<string>> | null>(null),
 ];
 
-export const useToken = () => useContext(TokenGetterContext);
-export const useTokenSetter = () => useContext(TokenSetterContext);
+export const [useToken, useTokenSetter] = [
+  () => useContext(TokenGetterContext),
+  () => useContext(TokenSetterContext),
+];
 
 export const isAuthed = () => {
   return Boolean(useToken());
